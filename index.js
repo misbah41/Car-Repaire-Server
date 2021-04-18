@@ -7,7 +7,6 @@ const ObjectId = require("mongodb").ObjectId;
 const cors = require("cors");
 const fs = require("fs-extra");
 require("dotenv").config();
-
 const app = express();
 const port = 3500;
 
@@ -32,7 +31,7 @@ client.connect((err) => {
 
   //root api
   app.get("/", (req, res) => {
-    res.send("Wonderful Misbah Hasan Error solved");
+    res.send("Wonderful Misbah Hasan Error not solved solved");
   });
 
   app.post("/addReview", (req, res) => {
@@ -163,8 +162,9 @@ app.get('/allOrdersList',(req, res)=>{
   
 
 
-  console.log("database connection successfully");
+  console.log("database connected successfully");
 });
 
 app.listen(process.env.PORT ||port );
+
 
