@@ -151,6 +151,16 @@ app.get('/allOrdersList',(req, res)=>{
 	});
 
 
+  //manage service api
+  app.delete("/delete/:id", (req, res) => {
+    servicesCollection
+      .findOneAndDelete({ _id: ObjectId(req.params.id) })
+      .then((result) => {
+        res.send(result.deletedCount > 0);
+      });
+  });
+
+  
 
 
   console.log("database connection successfully");
