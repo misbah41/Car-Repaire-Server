@@ -23,6 +23,9 @@ const client = new MongoClient(uri, {
 client.connect((err) => {
   console.log(err);
   const adminCollection = client.db("carRepairDatabase").collection("admin");
+  const userInfoCollection = client
+    .db("carRepairDatabase")
+    .collection("userinfo");
   const reviewCollection = client.db("carRepairDatabase").collection("reviews");
   const ordersCollection = client.db("carRepairDatabase").collection("orders");
   const servicesCollection = client
@@ -96,40 +99,31 @@ client.connect((err) => {
     });
   });
 
-
   //user ordersCollection
   app.post("/addorder", (req, res) => {
     const newOrder = req.body;
-    console.log('here und',newOrder);
+    console.log("here und", newOrder);
     ordersCollection.insertOne(newOrder).then((result) => {
       res.send(result.insertedCount > 0);
     });
   });
 
-
-
-
-
-
-//all orders list
-app.get('/allOrdersList',(req, res)=>{
-  ordersCollection.find({})
-  .toArray((err, documents)=>{
-    res.send(documents)
-  })
-})
-
-
+  //all orders list
+  app.get("/allOrdersList", (req, res) => {
+    ordersCollection.find({}).toArray((err, documents) => {
+      res.send(documents);
+    });
+  });
 
   //add admin for the appliaction
-  app.post('/adminAccess',(req, res) => {
+  app.post("/adminAccess", (req, res) => {
     const adminemail = req.body;
     adminCollection.insertOne(adminemail).then((result) => {
       res.send(result.insertedCount > 0);
-    })
+    });
   });
 
-//conditional rendering api
+  //conditional rendering api
   app.post("/isAdmin", (req, res) => {
     const email = req.body.email;
     adminCollection.find({ email: email }).toArray((err, doctors) => {
@@ -137,18 +131,14 @@ app.get('/allOrdersList',(req, res)=>{
     });
   });
 
-
-
-
   app.get("/bookingList/:email", (req, res) => {
-		ordersCollection.find({ email: req.params.email }).toArray(
-			(err, documents) => {
-				console.log(documents);
-				res.send(documents);
-			}
-		);
-	});
-
+    ordersCollection
+      .find({ email: req.params.email })
+      .toArray((err, documents) => {
+        console.log(documents);
+        res.send(documents);
+      });
+  });
 
   //manage service api
   app.delete("/delete/:id", (req, res) => {
@@ -159,12 +149,17 @@ app.get('/allOrdersList',(req, res)=>{
       });
   });
 
-  
+  app.post("/contact", (req, res) => {
+    const userInfo = req.body;
+    console.log(userInfo);
+    userInfoCollection.insertOne(userInfo).then((result) => {
+      res.send(result.insertedCount > 0);
+      res.redirect('/')
+    });
+  });
 
 
   console.log("database connected successfully");
 });
 
-app.listen(process.env.PORT ||port );
-
-
+app.listen(process.env.PORT || port);
